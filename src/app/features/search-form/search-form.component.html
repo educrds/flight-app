@@ -1,0 +1,50 @@
+<div class="form-container">
+  <p-tabView>
+    <p-tabPanel header="Ida e Volta">
+      <form class="wrapper" [formGroup]="searchForm">
+        <div class="d-row gap-8 align-end">
+          <flg-states-autocomplete label="Origem" formControlName="origem" />
+
+          <p-button
+            (onClick)="changeControls()"
+            [raised]="true"
+            [text]="true"
+            [rounded]="true"
+            icon="pi pi-arrow-right-arrow-left"
+          />
+
+          <flg-states-autocomplete label="Destino" formControlName="destino" />
+
+          <flg-datepicker formControlName="dates" />
+
+          <div>
+            <label for="date">Adultos</label>
+            <p-inputNumber
+              [showButtons]="true"
+              buttonLayout="horizontal"
+              formControlName="adultos"
+              incrementButtonIcon="pi pi-plus"
+              decrementButtonIcon="pi pi-minus"
+              mode="decimal"
+            />
+          </div>
+
+          <div>
+            <label for="date">Crianças</label>
+            <p-inputNumber
+              [showButtons]="true"
+              buttonLayout="horizontal"
+              formControlName="criancas"
+              incrementButtonIcon="pi pi-plus"
+              decrementButtonIcon="pi pi-minus"
+              mode="decimal"
+            />
+          </div>
+          <div>
+            <p-button (onClick)="searchFlights()" label="Buscar" />
+          </div>
+        </div>
+      </form>
+    </p-tabPanel>
+  </p-tabView>
+</div>
