@@ -1,0 +1,16 @@
+<form [formGroup]="formGroup">
+  <label for="state">{{ label }}</label>
+
+  <p-autoComplete
+    id="state"
+    formControlName="stateControl"
+    [dropdown]="true"
+    [suggestions]="filteredOptions"
+    (completeMethod)="filterState($event)"
+    field="nome"
+  >
+    <ng-template let-state pTemplate="item">
+      {{ getConcatenatedName(state) }}
+    </ng-template>
+  </p-autoComplete>
+</form>
