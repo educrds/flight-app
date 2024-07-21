@@ -4,13 +4,9 @@
   <p-autoComplete
     id="state"
     formControlName="stateControl"
-    [dropdown]="true"
+    [placeholder]="label"
     [suggestions]="filteredOptions"
-    (completeMethod)="filterState($event)"
-    field="nome"
+    field="name"
   >
-    <ng-template let-state pTemplate="item">
-      {{ getConcatenatedName(state) }}
-    </ng-template>
   </p-autoComplete>
 </form>
