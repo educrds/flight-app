@@ -3,7 +3,7 @@
     <p-tabPanel header="Ida e Volta">
       <form class="wrapper" [formGroup]="searchForm">
         <div class="d-row gap-8 align-end">
-          <flg-states-autocomplete label="Origem" formControlName="origem" />
+          <flg-airports-autocomplete label="Origem" formControlName="origem" />
 
           <p-button
             (onClick)="changeControls()"
@@ -13,7 +13,7 @@
             icon="pi pi-arrow-right-arrow-left"
           />
 
-          <flg-states-autocomplete label="Destino" formControlName="destino" />
+          <flg-airports-autocomplete label="Destino" formControlName="destino" />
 
           <flg-datepicker formControlName="dates" />
 
