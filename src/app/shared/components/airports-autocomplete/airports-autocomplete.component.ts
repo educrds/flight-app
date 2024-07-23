@@ -14,7 +14,7 @@ import {
 } from "@angular/forms";
 import { Airport } from "../../models/Airport";
 import { AutoCompleteModule, AutoCompleteSelectEvent } from "primeng/autocomplete";
-import { catchError, debounceTime, distinctUntilChanged, map, Observable, of, switchMap } from "rxjs";
+import { catchError, debounceTime, distinctUntilChanged, filter, map, Observable, of, switchMap } from "rxjs";
 
 @Component({
   selector: "flg-airports-autocomplete",
@@ -69,22 +69,24 @@ export class AirportsAutocompleteComponent implements OnInit, ControlValueAccess
       ?.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
+        filter((res) => res.length > 3),
         switchMap(query => this._getStatesList(query))
       )
-      .subscribe(filteredOptions => this.filteredOptions = filteredOptions);
+      .subscribe(filteredOptions => this.filteredOptions = filteredOptions.map((res: any) => res.properties )
+    );
   }
 
-  private _getStatesList(query: string): Observable<Airport[]> {
-    return this.statesService.getAirportsList$().pipe(
+  private _getStatesList(query: string): Observable<any> {
+    return this.statesService.getAirportsList$(query).pipe(
       map(res => {
-        return res.data.filter(airport => {
-          if (airport.skyId !== undefined) {
+        return res.features.filter(airport => {
+          if (airport.properties.iata !== undefined) {
             return (
-              airport.name.toLowerCase().includes(query.toLowerCase()) ||
-              airport.location.toLowerCase().includes(query.toLowerCase())
+              airport.properties.name.toLowerCase().includes(query.toLowerCase()) ||
+              airport.properties.municipality.toLowerCase().includes(query.toLowerCase())
             );
           }
-          return;
+          return false;
         });
       }),
       catchError(() => of([])) // Handle errors gracefully
@@ -92,7 +94,7 @@ export class AirportsAutocompleteComponent implements OnInit, ControlValueAccess
   }
 
   protected onSelectAirport(event: AutoCompleteSelectEvent) {
-    this.onChange(event.value);
+    this.onChange(event.value.iata);
     this.onTouched();
   }
 
