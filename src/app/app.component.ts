@@ -4,11 +4,12 @@ import { BannerComponent } from "./shared/components/banner/banner.component";
 import { SearchFormComponent } from "./features/search-form/search-form.component";
 import { ToolbarComponent } from "./shared/components/toolbar/toolbar.component";
 import { PrimeNGConfig } from 'primeng/api';
+import { FlightListComponent } from "./features/flight-list/flight-list.component";
 
 @Component({
   selector: "flg-root",
   standalone: true,
-  imports: [CommonModule, ToolbarComponent, BannerComponent, SearchFormComponent],
+  imports: [CommonModule, ToolbarComponent, BannerComponent, SearchFormComponent, FlightListComponent],
   templateUrl: "./app.component.html",
   styleUrl: "./app.component.scss",
 })
