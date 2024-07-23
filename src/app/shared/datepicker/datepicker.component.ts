@@ -11,13 +11,12 @@ import {
 } from "@angular/forms";
 import { CalendarModule } from 'primeng/calendar';
 
-
 @Component({
   selector: "flg-datepicker",
   standalone: true,
   imports: [ReactiveFormsModule, CalendarModule],
   templateUrl: "./datepicker.component.html",
-  styleUrl: "./datepicker.component.scss",
+  styleUrls: ["./datepicker.component.scss"],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -40,22 +39,21 @@ export class DatepickerComponent implements OnInit, ControlValueAccessor {
 
   constructor() {
     this.dateForm = this.#_fb.group({
-      partida: [null],
-      retorno: [null],
+      date: [null],
     });
   }
 
   ngOnInit(): void {
     this.dateForm.valueChanges.subscribe(value => {
       if (this._onChange) {
-        this._onChange(value);
+        this._onChange(value.date);
       }
     });
   }
 
   writeValue(value: any): void {
     if (value) {
-      this.dateForm.setValue(value, { emitEvent: false });
+      this.dateForm.setValue({ date: value }, { emitEvent: false });
     } else {
       this.dateForm.reset();
     }
