@@ -13,19 +13,8 @@ import {
   ValidationErrors,
 } from "@angular/forms";
 import { Airport } from "../../models/Airport";
-import { AutoCompleteCompleteEvent, AutoCompleteModule } from "primeng/autocomplete";
-import {
-  catchError,
-  debounceTime,
-  distinctUntilChanged,
-  filter,
-  map,
-  Observable,
-  of,
-  scan,
-  shareReplay,
-  switchMap,
-} from "rxjs";
+import { AutoCompleteModule, AutoCompleteSelectEvent } from "primeng/autocomplete";
+import { catchError, debounceTime, distinctUntilChanged, map, Observable, of, switchMap } from "rxjs";
 
 @Component({
   selector: "flg-airports-autocomplete",
@@ -52,14 +41,14 @@ export class AirportsAutocompleteComponent implements OnInit, ControlValueAccess
   private statesService = inject(AirportService);
   private fb = inject(FormBuilder);
 
-  protected formGroup!: FormGroup;
+  protected airportGroup!: FormGroup;
   protected filteredOptions: Airport[] = [];
 
   private onChange: (value: any) => void = () => {};
   private onTouched: () => void = () => {};
 
   writeValue(value: any): void {
-    this.formGroup.get("stateControl")?.setValue(value, { emitEvent: false });
+    this.airportGroup.get("airport")?.setValue(value, { emitEvent: false });
   }
 
   registerOnChange(fn: any): void {
@@ -71,36 +60,40 @@ export class AirportsAutocompleteComponent implements OnInit, ControlValueAccess
   }
 
   ngOnInit(): void {
-    this.formGroup = this.fb.group({
-      stateControl: [""],
+    this.airportGroup = this.fb.group({
+      airport: [null],
     });
 
-    this.formGroup
-      .get("stateControl")
+    this.airportGroup
+      .get("airport")
       ?.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        filter(query => query.length > 3),
-        switchMap(query => {
-          return this._getStatesList(query);
-        })
+        switchMap(query => this._getStatesList(query))
       )
-      .subscribe(filteredOptions => {
-        this.filteredOptions = filteredOptions;
-        this.onChange(filteredOptions[0]);
-        this.onTouched();
-      });
+      .subscribe(filteredOptions => this.filteredOptions = filteredOptions);
   }
 
   private _getStatesList(query: string): Observable<Airport[]> {
-    return this.statesService.getStatesList$().pipe(
+    return this.statesService.getAirportsList$().pipe(
       map(res => {
-        return res.data.filter(
-          airport => airport.name.toLowerCase().includes(query.toLowerCase()) || airport.location.toLowerCase().includes(query.toLowerCase())
-        );
+        return res.data.filter(airport => {
+          if (airport.skyId !== undefined) {
+            return (
+              airport.name.toLowerCase().includes(query.toLowerCase()) ||
+              airport.location.toLowerCase().includes(query.toLowerCase())
+            );
+          }
+          return;
+        });
       }),
       catchError(() => of([])) // Handle errors gracefully
     );
+  }
+
+  protected onSelectAirport(event: AutoCompleteSelectEvent) {
+    this.onChange(event.value);
+    this.onTouched();
   }
 
   /**

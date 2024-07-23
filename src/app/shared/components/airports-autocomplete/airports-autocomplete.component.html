@@ -1,12 +1,13 @@
-<form [formGroup]="formGroup">
+<form [formGroup]="airportGroup">
   <label for="state">{{ label }}</label>
 
   <p-autoComplete
     id="state"
-    formControlName="stateControl"
+    formControlName="airport"
     [placeholder]="label"
     [suggestions]="filteredOptions"
     field="name"
+    (onSelect)="onSelectAirport($event)"
   >
   </p-autoComplete>
 </form>
