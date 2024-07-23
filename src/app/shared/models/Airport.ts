@@ -7,9 +7,3 @@ export type Airport = {
   id: string;
   skyId: string;
 };
-
-export type AirportResponse = {
-  data: Airport[];
-  message: string;
-  status: boolean;
-};
